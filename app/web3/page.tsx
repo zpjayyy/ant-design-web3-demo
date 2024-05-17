@@ -7,7 +7,13 @@ import {
   NFTCard,
   useAccount,
 } from "@ant-design/web3";
-import { createConfig, http, useReadContract, useWriteContract } from "wagmi";
+import {
+  createConfig,
+  http,
+  useReadContract,
+  useWriteContract,
+  useWatchContractEvent,
+} from "wagmi";
 import { mainnet } from "wagmi/chains";
 import { OkxWallet, WagmiWeb3ConfigProvider } from "@ant-design/web3-wagmi";
 import { Button, message } from "antd";
@@ -43,6 +49,35 @@ const CallTest = () => {
   console.log("result", result);
 
   const { writeContract } = useWriteContract();
+
+  useWatchContractEvent({
+    address: "0xEcd0D12E21805803f70de03B72B1C162dB0898d9",
+    abi: [
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "address",
+            name: "minter",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "minted",
+        type: "event",
+      },
+    ],
+    eventName: "minted",
+    onLogs() {
+      message.success("minted");
+    },
+  });
 
   return (
     <div>
